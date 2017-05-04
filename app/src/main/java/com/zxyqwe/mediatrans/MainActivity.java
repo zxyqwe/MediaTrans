@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                search_net.setEnabled(false);
+                upload.setEnabled(true);
             }
         });
         picker.setOnClickListener(new View.OnClickListener() {
@@ -49,15 +51,24 @@ public class MainActivity extends AppCompatActivity {
                         .thumbnailScale(0.85f)
                         .imageEngine(new GlideEngine())
                         .forResult(REQUEST_CODE_CHOOSE);
-
             }
         });
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                picker.setEnabled(false);
+                upload.setEnabled(false);
 
+                mSelected.clear();
+                renew();
+                upload.setEnabled(true);
+                picker.setEnabled(true);
             }
         });
+    }
+
+    private void renew() {
+
     }
 
     @Override
@@ -66,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mSelected = Matisse.obtainResult(data);
             Log.d(TAG, "mSelected: " + mSelected);
+            renew();
         }
     }
 }
