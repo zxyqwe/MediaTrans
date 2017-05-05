@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     Button upload;
     TextView media_stat;
     List<Uri> mSelected;
+    NetworkUtil nu = new NetworkUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         search_net.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                boolean res = nu.searchNet();
+                if (!res) return;
                 search_net.setEnabled(false);
                 upload.setEnabled(true);
             }
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 picker.setEnabled(false);
                 upload.setEnabled(false);
-
+                nu.upload(mSelected);
                 mSelected.clear();
                 renew();
                 upload.setEnabled(true);
