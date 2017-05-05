@@ -16,8 +16,6 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.internal.utils.PhotoMetadataUtils;
 
-import java.io.File;
-import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -81,26 +79,12 @@ public class MainActivity extends AppCompatActivity {
         ContentResolver resolver = this.getContentResolver();
         StringBuilder res = new StringBuilder();
         String path;
-        File f;
         for (Uri m :
                 mSelected) {
             path = PhotoMetadataUtils.getPath(resolver, m);
-            f = new File(path);
-            res.append(path).append(' ').append(exchange(f.length())).append("\r\n");
+            res.append(path).append(' ').append(IOUtil.exchangeFileSize(path)).append("\r\n");
         }
         media_stat.setText(res.toString());
-    }
-
-    private String exchange(long i) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        char[] f = {' ', 'K', 'M', 'G'};
-        double di = (double) i;
-        int j = 0;
-        while (di > 1024) {
-            j++;
-            di /= 1024;
-        }
-        return df.format(di) + f[j] + 'B';
     }
 
     @Override
