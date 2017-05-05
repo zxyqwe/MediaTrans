@@ -1,9 +1,11 @@
 package com.zxyqwe.mediatrans;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
     Button picker;
     Button upload;
     TextView media_stat;
+    TextView net_stat;
     List<Uri> mSelected;
-    NetworkUtil nu = new NetworkUtil();
+    netHand nh = new netHand();
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +42,16 @@ public class MainActivity extends AppCompatActivity {
         picker = (Button) findViewById(R.id.picker);
         upload = (Button) findViewById(R.id.upload);
         media_stat = (TextView) findViewById(R.id.media_stat);
+        net_stat = (TextView) findViewById(R.id.net_stat);
 
         upload.setEnabled(false);
         search_net.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean res = nu.searchNet();
-                if (!res) return;
-                search_net.setEnabled(false);
-                upload.setEnabled(true);
+                Message msg = new Message();
+                msg.what = netHand.SEARCH_NET;
+                msg.obj = MainActivity.this;
+                nh.sendMessage(msg);
             }
         });
         picker.setOnClickListener(new View.OnClickListener() {
@@ -66,18 +71,20 @@ public class MainActivity extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                picker.setEnabled(false);
-                upload.setEnabled(false);
-                nu.upload(mSelected);
-                mSelected.clear();
-                renew();
-                upload.setEnabled(true);
-                picker.setEnabled(true);
+                Message msg = new Message();
+                msg.what = netHand.UPLOAD;
+                msg.obj = MainActivity.this;
+                nh.sendMessage(msg);
             }
         });
+        pd = new ProgressDialog(this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("请稍等");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
     }
 
-    private void renew() {
+    public void renew() {
         ContentResolver resolver = this.getContentResolver();
         StringBuilder res = new StringBuilder();
         String path;
