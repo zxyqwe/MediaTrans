@@ -72,7 +72,7 @@ class NetworkUtil {
                 if (is == null) continue;
                 int temp;
                 StringBuilder sb = new StringBuilder();
-                while ((temp = is.read()) != -1) {    //当没有读取完时，继续读取
+                while ((temp = is.read()) != -1) {
                     sb.append((byte) temp);
                 }
                 is.close();

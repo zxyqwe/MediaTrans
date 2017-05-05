@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         pd.setMessage("请稍等");
         pd.setIndeterminate(true);
         pd.setCancelable(false);
+        pd.setCanceledOnTouchOutside(false);
     }
 
     public void renew() {
