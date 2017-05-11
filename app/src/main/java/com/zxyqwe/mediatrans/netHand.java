@@ -9,11 +9,13 @@ class netHand extends Handler {
     static final int UPLOAD = 23;
     private static final int SEARCH_NET_DONE = 24;
     private static final int UPLOAD_DONE = 25;
-    private NetworkUtil nu = new NetworkUtil();
+    public NetworkUtil nu = new NetworkUtil();
 
     @Override
     public void handleMessage(Message msg) {
         final MainActivity ma = (MainActivity) msg.obj;
+        Bundle bund;
+        String log;
         switch (msg.what) {
             case SEARCH_NET:
                 ma.pd.show();
@@ -35,8 +37,8 @@ class netHand extends Handler {
                 break;
             case SEARCH_NET_DONE:
                 ma.pd.dismiss();
-                Bundle bund = msg.getData();
-                String log = bund.getString("log");
+                bund = msg.getData();
+                log = bund.getString("log");
                 boolean res = bund.getBoolean("res");
                 ma.net_stat.setText(log);
                 if (!res) return;
@@ -50,16 +52,23 @@ class netHand extends Handler {
                 new Thread() {
                     @Override
                     public void run() {
-                        nu.upload(ma);
+                        StringBuilder log = new StringBuilder();
+                        nu.upload(ma, log);
                         Message nmsg = new Message();
                         nmsg.what = UPLOAD_DONE;
                         nmsg.obj = ma;
+                        Bundle bund = new Bundle();
+                        bund.putString("log", log.toString());
+                        nmsg.setData(bund);
                         ma.nh.sendMessage(nmsg);
                     }
                 }.start();
                 break;
             case UPLOAD_DONE:
                 ma.pd.dismiss();
+                bund = msg.getData();
+                log = bund.getString("log");
+                ma.upload_stat.setText(log);
                 ma.mSelected.clear();
                 ma.renew();
                 ma.upload.setEnabled(true);

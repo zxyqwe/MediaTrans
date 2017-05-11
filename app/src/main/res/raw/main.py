@@ -54,12 +54,13 @@ class HttpServer(threading.Thread):
 
 if __name__ == "__main__":
     HSER = HttpServer()
+    HSER.setDaemon(True)
     HSER.start()
     PORT = 5555
     UDPSOC = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     UDPSOC.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     UDPSOC.bind(('', PORT))
     while True:
-        MSG, ADDR = UDPSOC.recvfrom()
+        MSG, ADDR = UDPSOC.recvfrom(1024)
         print "Got data", MSG, "from", ADDR
         UDPSOC.sendto(MSG, ADDR)

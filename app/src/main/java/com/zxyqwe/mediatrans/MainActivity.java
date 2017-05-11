@@ -18,6 +18,7 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.internal.utils.PhotoMetadataUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     Button upload;
     TextView media_stat;
     TextView net_stat;
-    List<Uri> mSelected;
+    TextView upload_stat;
+    List<Uri> mSelected = new ArrayList<>();
     netHand nh = new netHand();
     ProgressDialog pd;
 
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         upload = (Button) findViewById(R.id.upload);
         media_stat = (TextView) findViewById(R.id.media_stat);
         net_stat = (TextView) findViewById(R.id.net_stat);
+        upload_stat = (TextView) findViewById(R.id.upload_stat);
 
         upload.setEnabled(false);
         search_net.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Matisse.from(MainActivity.this)
-                        .choose(MimeType.allOf())
+                        .choose(MimeType.ofAll())
                         .countable(true)
                         .maxSelectable(Integer.MAX_VALUE)
                         .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
