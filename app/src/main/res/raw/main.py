@@ -8,6 +8,7 @@ import socket
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urllib
 import urlparse
+import json
 
 
 class HttpHand(BaseHTTPRequestHandler):
@@ -35,7 +36,7 @@ class HttpHand(BaseHTTPRequestHandler):
         elif parsed_path.path=="upload":
             pass
 
-        message = "aaa"
+        message = json.dumps(datas)
 
         self.send_response(200)
         self.end_headers()
