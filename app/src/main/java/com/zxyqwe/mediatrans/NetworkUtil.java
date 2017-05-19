@@ -34,7 +34,7 @@ class NetworkUtil {
     }
 
     private int getWiFiIP(Context context) {
-        WifiManager wifiManager = (WifiManager) context
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext()
                 .getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         return wifiInfo.getIpAddress();
@@ -56,9 +56,8 @@ class NetworkUtil {
         try {
             DatagramSocket client = new DatagramSocket();
 
-            String sendStr = TAG;
             byte[] sendBuf;
-            sendBuf = sendStr.getBytes();
+            sendBuf = TAG.getBytes();
             log.append("Send IP: ").append(int2ip3(ip)).append("255").append("\r\n");
             InetAddress addr = InetAddress.getByName(int2ip3(ip) + "255");
             DatagramPacket sendPacket
@@ -90,7 +89,7 @@ class NetworkUtil {
             RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), f);
             RequestBody requestBody = new MultipartBody.Builder().addFormDataPart("filename", f.getName(), fileBody).build();
             Request requestPostFile = new Request.Builder()
-                    .url("http://" + ma.nh.nu.server_ip + "/upload")
+                    .url("http://" + ma.nh.nu.server_ip + ":8000/upload")
                     .post(requestBody)
                     .build();
             try {
